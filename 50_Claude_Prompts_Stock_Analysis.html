@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>50 Claude Prompts for Stock Analysis</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f9fa;color:#1a1a1a;min-height:100vh;padding:2rem 1rem}
+.container{max-width:900px;margin:0 auto}
+.header{text-align:center;margin-bottom:2rem;padding:2rem;background:#fff;border-radius:16px;border:1px solid #e8e8e8}
+.header h1{font-size:28px;font-weight:600;margin-bottom:6px;color:#111}
+.header p{font-size:15px;color:#666}
+.badge-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:16px}
+.hbadge{font-size:11px;padding:4px 10px;border-radius:20px;background:#f0f0f0;color:#555;font-weight:500}
+.controls{display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:220px}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#999;pointer-events:none}
+#search{width:100%;padding:9px 10px 9px 36px;border:1px solid #ddd;border-radius:10px;font-size:14px;background:#fff;color:#111}
+#search:focus{outline:none;border-color:#888}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.fbtn{padding:6px 12px;border:1px solid #ddd;border-radius:20px;font-size:12px;cursor:pointer;background:#fff;color:#666;font-family:inherit;transition:all .15s}
+.fbtn:hover,.fbtn.active{background:#111;border-color:#111;color:#fff}
+.stats{font-size:13px;color:#888;margin-bottom:1rem;padding-bottom:10px;border-bottom:1px solid #eee}
+.stats span{font-weight:600;color:#111}
+.prompt-grid{display:flex;flex-direction:column;gap:10px}
+.card{background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:1rem 1.25rem;transition:border-color .15s}
+.card:hover{border-color:#bbb}
+.card-top{display:flex;align-items:flex-start;gap:8px;margin-bottom:10px}
+.num{font-size:11px;color:#bbb;min-width:28px;margin-top:3px}
+.cat-badge{font-size:11px;padding:3px 9px;border-radius:20px;white-space:nowrap;font-weight:500;flex-shrink:0;margin-top:1px}
+.card-title{font-size:14px;font-weight:600;color:#111;flex:1}
+.prompt-box{font-size:13px;color:#444;line-height:1.65;background:#f6f6f6;border-radius:8px;padding:10px 14px;margin-bottom:10px;font-family:'SF Mono',Monaco,'Courier New',monospace}
+.card-footer{display:flex;align-items:center;justify-content:space-between}
+.use-label{font-size:12px;color:#999}
+.copy-btn{display:flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid #ddd;border-radius:8px;font-size:12px;cursor:pointer;background:#fff;color:#555;font-family:inherit;transition:all .15s}
+.copy-btn:hover{background:#f0f0f0;border-color:#bbb}
+.copy-btn.copied{color:#059669;border-color:#059669;background:#f0fdf4}
+.hidden{display:none}
+.empty{text-align:center;padding:4rem;color:#999;font-size:15px}
+.c1{background:#EEF2FF;color:#4338CA}
+.c2{background:#ECFDF5;color:#065F46}
+.c3{background:#EFF6FF;color:#1E40AF}
+.c4{background:#FFFBEB;color:#92400E}
+.c5{background:#FFF1F2;color:#9F1239}
+.c6{background:#F0FDF4;color:#166534}
+.c7{background:#F9FAFB;color:#374151}
+.c8{background:#FDF4FF;color:#6B21A8}
+.c9{background:#FFF7ED;color:#9A3412}
+.c10{background:#F0F9FF;color:#0C4A6E}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+  <h1>50 Claude Prompts for Stock Analysis</h1>
+  <p>Copy-paste prompts for equity research, valuation, and investment analysis</p>
+  <div class="badge-row">
+    <span class="hbadge">Business Model</span>
+    <span class="hbadge">Moat Analysis</span>
+    <span class="hbadge">Financial Statements</span>
+    <span class="hbadge">Ratio Analysis</span>
+    <span class="hbadge">DCF Valuation</span>
+    <span class="hbadge">Relative Valuation</span>
+    <span class="hbadge">Earnings &amp; Management</span>
+    <span class="hbadge">Industry Research</span>
+    <span class="hbadge">Risk Assessment</span>
+    <span class="hbadge">Technical &amp; Trends</span>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="search" placeholder="Search prompts..." oninput="filter()">
+  </div>
+</div>
+<div class="filter-row" id="filters"></div>
+<div class="stats">Showing <span id="count">50</span> of 50 prompts across 10 categories</div>
+<div class="prompt-grid" id="grid"></div>
+<div class="empty hidden" id="empty">No prompts match your search.</div>
+</div>
+
+<script>
+const cats=[
+  {id:1,name:"Business Model",cls:"c1"},
+  {id:2,name:"Moat & Competitive",cls:"c2"},
+  {id:3,name:"Financial Statements",cls:"c3"},
+  {id:4,name:"Ratio Analysis",cls:"c4"},
+  {id:5,name:"DCF Valuation",cls:"c5"},
+  {id:6,name:"Relative Valuation",cls:"c6"},
+  {id:7,name:"Earnings & Management",cls:"c7"},
+  {id:8,name:"Industry Research",cls:"c8"},
+  {id:9,name:"Risk Assessment",cls:"c9"},
+  {id:10,name:"Technical & Trends",cls:"c10"}
+];
+
+const prompts=[
+  {id:1,cat:1,title:"Business model breakdown",use:"Any listed company",text:"Analyze [COMPANY NAME]'s business model. Explain: (1) how it generates revenue across segments, (2) its cost structure and key operating levers, (3) the flywheel or network effects driving growth, and (4) how scalable the model is. Use plain language as if briefing a senior portfolio manager."},
+  {id:2,cat:1,title:"Customer & revenue segmentation",use:"Consumer/B2B companies",text:"Break down [COMPANY]'s revenue by customer segment, geography, and product line. Which segment has the highest growth rate and margin? Which is most at risk? Highlight any over-reliance on a single customer or region."},
+  {id:3,cat:1,title:"Business model evolution",use:"Long-term holders",text:"How has [COMPANY]'s business model changed over the past 5 years? What strategic pivots did management make, what worked, and what didn't? Is the current model structurally stronger or weaker than it was in [YEAR]?"},
+  {id:4,cat:1,title:"Unit economics deep-dive",use:"Growth stocks, SaaS",text:"Estimate [COMPANY]'s unit economics: Customer Acquisition Cost (CAC), Lifetime Value (LTV), LTV/CAC ratio, payback period, and gross margin per unit. What do these metrics suggest about the quality of growth — is the company buying revenue or earning it?"},
+  {id:5,cat:1,title:"Capital allocation scorecard",use:"Mature companies",text:"Score [COMPANY]'s capital allocation over the last 5 years across: reinvestment into the core business, M&A (value created vs destroyed), buybacks (timing and pricing), dividends, and debt management. Rate each on a 1–5 scale with brief justification."},
+  {id:6,cat:2,title:"Moat identification framework",use:"Any company",text:"Apply Porter's Five Forces to [COMPANY] and then identify which of the five moat sources — cost advantage, switching costs, network effects, intangible assets (brand/IP/regulation), or efficient scale — the company actually has. Rank them by durability and current strength."},
+  {id:7,cat:2,title:"Competitive advantage stress test",use:"Before initiating positions",text:"What are the three biggest threats to [COMPANY]'s competitive advantage over the next 3–5 years? For each threat: (1) assess probability, (2) estimate the impact on margins or market share, and (3) identify any early warning indicators to monitor."},
+  {id:8,cat:2,title:"Peer comparison — moat quality",use:"Sector screening",text:"Compare [COMPANY] vs [COMPETITOR 1] and [COMPETITOR 2] on moat quality. Use gross margin trend, ROIC, operating leverage, and pricing power as proxies. Which company has the most defensible position and why?"},
+  {id:9,cat:2,title:"Brand & pricing power audit",use:"Consumer, pharma, tech",text:"Assess [COMPANY]'s pricing power: Has it raised prices above inflation over the last 5 years without volume loss? Are customers sticky or purely price-sensitive? Does brand perception justify a premium? Support your view with revenue per unit or ASP trend data."},
+  {id:10,cat:2,title:"Market share trajectory",use:"Duopoly/oligopoly sectors",text:"Track [COMPANY]'s market share over the last 5 years in its primary market. Is it gaining, holding, or losing share? What explains the trend? If it's losing share, is this structural or cyclical? What would it take to reverse?"},
+  {id:11,cat:3,title:"Income statement quality check",use:"Any reporting company",text:"Review [COMPANY]'s income statement for the last 3 years. Flag: (1) revenue recognition policies that may inflate top-line, (2) unusual non-operating income included in operating profit, (3) margin trends by segment, and (4) any one-time charges being excluded from adjusted EPS that recur annually."},
+  {id:12,cat:3,title:"Balance sheet health assessment",use:"Credit analysis",text:"Analyze [COMPANY]'s balance sheet strength: Net debt/EBITDA, interest coverage, debt maturity schedule, goodwill as % of total assets, off-balance-sheet liabilities, and working capital cycle. Flag any deterioration over 3 years and assess refinancing risk."},
+  {id:13,cat:3,title:"Cash flow quality analysis",use:"Before any investment",text:"Compare [COMPANY]'s reported net income vs operating cash flow vs free cash flow over 5 years. Calculate the cash conversion ratio and FCF margin. Are earnings backed by cash? Identify any divergence and explain what's driving it — working capital build, capex cycle, or accounting choices."},
+  {id:14,cat:3,title:"Red flag forensic screen",use:"High-risk or flagged companies",text:"Run a forensic accounting screen on [COMPANY] for: channel stuffing signals (receivables growing faster than revenue), inventory build-up vs gross margin compression, aggressive capitalization of R&D or software costs, and related-party transactions. Summarize risk level as Low/Medium/High."},
+  {id:15,cat:3,title:"Working capital cycle analysis",use:"Manufacturing, retail, FMCG",text:"Calculate [COMPANY]'s Cash Conversion Cycle (DIO + DSO – DPO) for the last 5 years. Is the cycle improving or deteriorating? How does it compare to peers? What does this imply about the company's bargaining power in its supply chain and inventory management efficiency?"},
+  {id:16,cat:4,title:"Profitability ratio dashboard",use:"Initial screening",text:"Calculate and interpret these profitability ratios for [COMPANY] over 5 years: Gross margin, EBITDA margin, EBIT margin, Net margin, ROE (DuPont breakdown), ROIC, and ROCE. Comment on trend, absolute level vs peers, and what's driving any meaningful change."},
+  {id:17,cat:4,title:"Leverage & coverage ratios",use:"High-yield, credit watch",text:"For [COMPANY], calculate: Debt/Equity, Net Debt/EBITDA, Debt/Assets, Interest Coverage (EBIT/Interest), DSCR, and Fixed Charge Coverage Ratio. Rate the credit risk as Investment Grade, High Yield, or Distressed. What is the maximum safe leverage this business can sustain given its cash flow volatility?"},
+  {id:18,cat:4,title:"Liquidity stress test",use:"Small-cap, high-debt companies",text:"Run a liquidity stress test on [COMPANY]: Calculate Current Ratio, Quick Ratio, and Cash Ratio. Model a scenario where revenue drops 20% — can the company meet near-term obligations? How long can it operate on existing liquidity before needing external funding?"},
+  {id:19,cat:4,title:"Efficiency ratios analysis",use:"Asset-heavy industries",text:"Calculate and interpret Asset Turnover, Inventory Turnover, Receivables Turnover, and Fixed Asset Turnover for [COMPANY] over 3 years. How efficiently is the company deploying its assets relative to peers? Has efficiency improved or deteriorated with scale?"},
+  {id:20,cat:4,title:"DuPont decomposition",use:"ROE deep-dive",text:"Perform a 5-factor DuPont decomposition on [COMPANY]'s ROE: Tax burden × Interest burden × EBIT margin × Asset turnover × Leverage. Over 5 years, which factor has contributed most to changes in ROE — operational improvement, financial engineering, or tax optimization? Is the ROE quality high or manufactured?"},
+  {id:21,cat:5,title:"Base case DCF build",use:"Core valuation",text:"Build a 5-year DCF for [COMPANY] using these assumptions: Revenue CAGR of [X]%, EBIT margin expanding from [Y]% to [Z]%, D&A as [%] of revenue, capex as [%] of revenue, tax rate [T]%, and terminal growth of [g]%. Use a WACC of [W]%. Show FCFF for each year, terminal value, and implied share price. What is the bear/bull range if WACC varies ±1%?"},
+  {id:22,cat:5,title:"WACC calculation",use:"Before any DCF",text:"Calculate the WACC for [COMPANY]: Use CAPM for cost of equity (risk-free rate = [X]%, beta = [B], ERP = [P]%), pre-tax cost of debt = [D]%, effective tax rate = [T]%, and target D/E ratio of [ratio]. Discuss whether the WACC feels right given the company's business risk and financial risk profile."},
+  {id:23,cat:5,title:"Sensitivity table — DCF",use:"Investment committee presentations",text:"Create a DCF sensitivity table for [COMPANY] showing implied share price across a grid: terminal growth rate (rows: 1%, 2%, 3%, 4%) vs WACC (columns: 7%, 8%, 9%, 10%, 11%). Highlight the current market price and show at which combination of assumptions the stock is fairly valued."},
+  {id:24,cat:5,title:"Reverse DCF — implied growth",use:"Checking for overvaluation",text:"At [COMPANY]'s current market price of [PRICE] and using a WACC of [W]% and terminal growth of [g]%, work backwards to calculate the revenue CAGR and FCF margin the market is implying over the next 10 years. Are these assumptions achievable based on the company's history? What would need to be true for this price to be justified?"},
+  {id:25,cat:5,title:"DCF scenario analysis — Bear/Base/Bull",use:"Investment thesis construction",text:"Model three DCF scenarios for [COMPANY]: Bear case (revenue flat, margin compression, high WACC), Base case (consensus growth, stable margins), and Bull case (market share gains, margin expansion, lower WACC). Calculate the probability-weighted intrinsic value. What is the asymmetry of the risk/reward at the current price?"},
+  {id:26,cat:6,title:"Comparable company analysis (Comps)",use:"Relative valuation",text:"Identify 5 relevant public comparables for [COMPANY] and build a comps table showing: EV/EBITDA (LTM and NTM), P/E (LTM and NTM), EV/Revenue, P/FCF, and EV/EBIT. Derive an implied valuation range for [COMPANY] based on the median and mean multiples. Justify any premium or discount vs the peer group."},
+  {id:27,cat:6,title:"Precedent transactions analysis",use:"M&A context, acquisition targets",text:"Find precedent M&A transactions in [COMPANY]'s sector over the last 5 years. Build a precedent transactions table showing: deal date, acquirer, target, deal value, EV/EBITDA, EV/Revenue, and any control premium paid. What does this imply for [COMPANY]'s potential acquisition value?"},
+  {id:28,cat:6,title:"PEG ratio analysis",use:"Growth stock screening",text:"Calculate [COMPANY]'s PEG ratio (P/E ÷ EPS growth rate) using both trailing and forward earnings. How does it compare to peers? Is the growth rate being used consensus or management guidance? What does a PEG above/below 1.0 imply about the current valuation — is it growth at a reasonable price?"},
+  {id:29,cat:6,title:"EV/EBITDA vs ROIC scatter",use:"Sector-wide valuation",text:"For [SECTOR] companies, plot EV/EBITDA on the Y-axis against ROIC on the X-axis. Which companies appear overvalued (high multiple, low ROIC) and undervalued (low multiple, high ROIC)? Where does [COMPANY] sit on this matrix and what does it imply?"},
+  {id:30,cat:6,title:"Sum-of-the-parts (SOTP) valuation",use:"Conglomerates, diversified companies",text:"Perform a SOTP valuation for [COMPANY] by segmenting the business into [SEGMENT 1], [SEGMENT 2], [SEGMENT 3]. Value each segment using the most appropriate multiple for that industry. Sum the segment values, deduct net debt and central costs, and compare to current market cap. What is the conglomerate discount or premium?"},
+  {id:31,cat:7,title:"Earnings call analysis — management tone",use:"Post-results",text:"Analyze the language in [COMPANY]'s most recent earnings call transcript. Flag: (1) hedging language on guidance, (2) shift in tone vs prior quarters, (3) analyst pushback areas, (4) topics management avoided or deflected, and (5) any disconnect between the prepared remarks and the Q&A."},
+  {id:32,cat:7,title:"Guidance credibility tracker",use:"Any company with forward guidance",text:"For [COMPANY], compare management's guidance vs actual results for revenue and EPS over the last 8 quarters. Does management consistently beat, miss, or sandbag guidance? Is the guidance range appropriately wide given business uncertainty? What does this pattern suggest about management credibility?"},
+  {id:33,cat:7,title:"Management incentive alignment",use:"Governance analysis",text:"Review [COMPANY]'s executive compensation structure. Are bonuses tied to revenue, EPS, ROIC, TSR, or a mix? Does the metric selection align with long-term shareholder value or can it be gamed? What is the CEO's equity ownership as % of shares outstanding? Are there clawback provisions in place?"},
+  {id:34,cat:7,title:"Insider activity interpretation",use:"Ongoing monitoring",text:"Summarize recent insider transactions at [COMPANY]: Who bought or sold, what size relative to their total holding, and at what price relative to current market price. Distinguish between programmatic selling (10b5-1 plans) and discretionary activity. What signal, if any, does the insider activity send?"},
+  {id:35,cat:7,title:"Earnings quality assessment",use:"Before position initiation",text:"Assess the quality of [COMPANY]'s earnings: (1) What % of EPS comes from operating income vs non-operating items? (2) How large are non-GAAP adjustments and are they recurring? (3) What is the gap between EPS and CFPS? (4) Has the share count changed materially? Build an earnings quality score from 1–10 with reasoning."},
+  {id:36,cat:8,title:"Industry structure analysis",use:"New sector entry",text:"Map the competitive structure of the [INDUSTRY] sector: (1) Market size and growth rate, (2) number of players and concentration ratio, (3) barriers to entry, (4) regulatory environment, (5) key value chain dynamics. Which part of the value chain captures the most profit and why?"},
+  {id:37,cat:8,title:"Macro sensitivity mapping",use:"Top-down analysts",text:"Identify the top 5 macroeconomic variables that drive [COMPANY]'s earnings: (e.g., interest rates, commodity prices, FX, GDP growth, credit spreads). For each variable, quantify the sensitivity — for every 1% change in [VARIABLE], what is the estimated impact on EBITDA or EPS? Which macro scenario is most dangerous for this stock?"},
+  {id:38,cat:8,title:"Regulatory risk assessment",use:"Financials, pharma, energy, tech",text:"Assess the regulatory risk for [COMPANY]: (1) Key regulations currently governing operations, (2) pending regulatory changes and their likely impact, (3) historical instances of regulatory penalties or compliance issues, (4) lobbying activity and political exposure. Rate regulatory risk as Low/Medium/High/Very High."},
+  {id:39,cat:8,title:"Disruption threat mapping",use:"Tech, media, retail, autos",text:"Map the disruption risk for [COMPANY]'s core business over a 5–10 year horizon. Identify: emerging technologies threatening the business model, startups with disruptive unit economics, incumbent response capabilities, and historical analogues from other industries. Rate disruption risk and estimate the timeline."},
+  {id:40,cat:8,title:"TAM/SAM/SOM build",use:"Growth stocks, IPOs",text:"Estimate [COMPANY]'s Total Addressable Market (TAM), Serviceable Addressable Market (SAM), and Serviceable Obtainable Market (SOM) with both bottom-up and top-down approaches. What market share would [COMPANY] need to capture to justify its current valuation at a reasonable multiple? Is the TAM claim realistic or inflated?"},
+  {id:41,cat:9,title:"Bear case thesis construction",use:"Before initiating any position",text:"Construct the strongest possible bear case for [COMPANY] without straw-manning it. What would cause a 40–50% drawdown from current price? Identify: the core business risk, the balance sheet vulnerability, the valuation risk, and the macro/exogenous risk. How likely is each and how correlated are they?"},
+  {id:42,cat:9,title:"Debt maturity & refinancing risk",use:"High-leverage companies",text:"Analyze [COMPANY]'s debt maturity profile: How much debt matures in 1, 2, 3, 4, and 5+ years? At what cost was the debt issued vs current market rates? If it needs to refinance at current rates, what is the incremental interest burden? Under what scenario does it face a liquidity or solvency crisis?"},
+  {id:43,cat:9,title:"Cyclicality & earnings volatility",use:"Cyclical sectors",text:"Assess how cyclical [COMPANY]'s earnings are. Trace revenue and earnings through the last two economic cycles. What was peak-to-trough EPS decline? How long did recovery take? What is the normalized mid-cycle EPS? What multiple should be applied to normalized earnings vs peak earnings?"},
+  {id:44,cat:9,title:"Investment thesis monitoring checklist",use:"Existing positions",text:"Create a monitoring checklist for my [COMPANY] investment thesis. List: (1) the 5 key assumptions the thesis rests on, (2) the leading indicators I should track quarterly, (3) the KPIs that would confirm thesis progress, (4) the red flags that would trigger a thesis review, and (5) the conditions that would cause me to exit the position."},
+  {id:45,cat:9,title:"ESG risk materiality assessment",use:"ESG-aware investors",text:"Assess the material ESG risks for [COMPANY]: (1) Environmental — carbon footprint, physical climate risk, regulatory exposure; (2) Social — labor practices, supply chain risk, data privacy; (3) Governance — board independence, audit quality, related-party risks. Which ESG factor poses the most financial risk to the investment thesis?"},
+  {id:46,cat:10,title:"Price action vs fundamentals divergence",use:"Entry/exit timing",text:"[COMPANY]'s stock has moved [X]% over the last [PERIOD] while EPS estimates have moved [Y]%. Analyze whether this move is justified by fundamental changes or whether it represents multiple expansion/compression. At current prices, is the stock pricing in the best case, worst case, or base case scenario?"},
+  {id:47,cat:10,title:"Analyst consensus vs independent view",use:"Differentiated research",text:"The sell-side consensus on [COMPANY] is [BUY/HOLD/SELL] with an average price target of [PT]. What are the 3 biggest assumptions the consensus may be wrong about? Where is the variant perception opportunity — what does the market underestimate or overestimate? What catalyst could close the gap?"},
+  {id:48,cat:10,title:"Short interest & positioning analysis",use:"Contrarian setups",text:"[COMPANY] currently has [X]% short interest (days to cover: [Y] days). Is the short thesis well-known or potentially exhausted? What would trigger a short squeeze? Conversely, if you were the short seller, what is the core thesis for being bearish? Assess whether current positioning creates asymmetric opportunity."},
+  {id:49,cat:10,title:"Catalyst timeline mapping",use:"Event-driven investing",text:"Map the near-term catalysts for [COMPANY] over the next 12 months: earnings dates, product launches, regulatory decisions, management guidance, M&A speculation, index inclusion/exclusion, or capital markets events. For each catalyst, estimate: direction of likely surprise, magnitude of potential move, and probability."},
+  {id:50,cat:10,title:"Full investment memo synthesis",use:"Final buy/sell decision",text:"Write a 1-page investment memo for [COMPANY] covering: (1) Business overview in 3 sentences, (2) Investment thesis in 3 bullet points, (3) Key financial metrics (Revenue CAGR, EBITDA margin, Net Debt/EBITDA, ROIC), (4) Valuation — intrinsic value range and current price vs value, (5) Key risks, (6) Position sizing recommendation (Starter/Full/Avoid) with reasoning, and (7) Target price and timeline."}
+];
+
+let activeFilter="All";
+
+function getCat(id){return cats.find(c=>c.id===id)}
+
+function renderFilters(){
+  const el=document.getElementById("filters");
+  const all=["All",...cats.map(c=>c.name)];
+  el.innerHTML=all.map(n=>`<button class="fbtn${n==="All"?" active":""}" onclick="setFilter('${n}')">${n}</button>`).join("");
+}
+
+function setFilter(name){
+  activeFilter=name;
+  document.querySelectorAll(".fbtn").forEach(b=>b.classList.toggle("active",b.textContent===name));
+  filter();
+}
+
+function filter(){
+  const q=document.getElementById("search").value.toLowerCase();
+  const grid=document.getElementById("grid");
+  const empty=document.getElementById("empty");
+  let v=0;
+  document.querySelectorAll(".card").forEach(card=>{
+    const matchCat=activeFilter==="All"||card.dataset.cat===activeFilter;
+    const matchQ=!q||card.dataset.search.includes(q);
+    const show=matchCat&&matchQ;
+    card.classList.toggle("hidden",!show);
+    if(show)v++;
+  });
+  document.getElementById("count").textContent=v;
+  grid.classList.toggle("hidden",v===0);
+  empty.classList.toggle("hidden",v>0);
+}
+
+function copyPrompt(btn,id){
+  const p=prompts.find(x=>x.id===id);
+  navigator.clipboard.writeText(p.text).then(()=>{
+    btn.textContent="✓ Copied!";
+    btn.classList.add("copied");
+    setTimeout(()=>{btn.textContent="Copy";btn.classList.remove("copied")},2000);
+  });
+}
+
+function renderPrompts(){
+  const grid=document.getElementById("grid");
+  grid.innerHTML=prompts.map(p=>{
+    const cat=getCat(p.cat);
+    const search=`${p.title} ${p.text} ${cat.name}`.toLowerCase();
+    return `<div class="card" data-cat="${cat.name}" data-search="${search.replace(/"/g,'&quot;')}">
+  <div class="card-top">
+    <span class="num">#${String(p.id).padStart(2,"0")}</span>
+    <span class="cat-badge ${cat.cls}">${cat.name}</span>
+    <span class="card-title">${p.title}</span>
+  </div>
+  <div class="prompt-box">${p.text}</div>
+  <div class="card-footer">
+    <span class="use-label">Best for: ${p.use}</span>
+    <button class="copy-btn" onclick="copyPrompt(this,${p.id})">Copy</button>
+  </div>
+</div>`;
+  }).join("");
+}
+
+renderFilters();
+renderPrompts();
+</script>
+</body>
+</html>
